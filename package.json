@@ -1,0 +1,42 @@
+{
+  "name": "vue-highcharts",
+  "version": "0.0.0",
+  "description": "Highcharts component for Vue",
+  "main": "dist/vue-highcharts.js",
+  "jsnext:main": "src/index.js",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "bundle": "rollup src/index.js -f umd -n VueHighcharts -e Highcharts -g highcharts:Highcharts -o dist/vue-highcharts.js",
+    "minify": "uglifyjs dist/vue-highcharts.js -m -o dist/vue-highcharts.min.js",
+    "build": "npm run bundle && npm run minify",
+    "version": "npm run build && git add -A dist",
+    "postversion": "git push && git push --tags && npm publish"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/weizhenye/vue-highcharts.git"
+  },
+  "keywords": [
+    "vue",
+    "highcharts",
+    "chart",
+    "plugin",
+    "component"
+  ],
+  "author": "Zhenye Wei",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/weizhenye/vue-highcharts/issues"
+  },
+  "homepage": "https://github.com/weizhenye/vue-highcharts#readme",
+  "peerDependencies": {
+    "highcharts": "*"
+  },
+  "devDependencies": {
+    "rollup": "^0.36.3",
+    "uglify-js": "^2.7.3"
+  }
+}
