@@ -9,7 +9,7 @@
     "src"
   ],
   "scripts": {
-    "bundle": "rollup src/index.js -f umd -n VueHighcharts -e Highcharts -g highcharts:Highcharts -o dist/vue-highcharts.js",
+    "bundle": "rollup src/index.js -f umd -n VueHighcharts -g highcharts:Highcharts -o dist/vue-highcharts.js",
     "minify": "uglifyjs dist/vue-highcharts.js -m -o dist/vue-highcharts.min.js",
     "build": "npm run bundle && npm run minify",
     "version": "npm run build && git add -A dist",
