@@ -1,32 +1,37 @@
+import ctors from './constrators.js';
+
 function create(tagName, Highcharts) {
-  var ctors = {
-    highcharts: 'Chart',
-    highstock: 'StockChart',
-    highmaps: 'Map'
-  };
   var Ctor = Highcharts[ctors[tagName]];
   if (!Ctor) {
     return null;
   }
+  var isRenderer = tagName === 'highcharts-renderer';
   return {
     name: tagName,
     template: '<div></div>',
-    props: {
-      options: Object
-    },
+    props: isRenderer
+      ? {
+          width: { type: Number, required: true },
+          height: { type: Number, required: true }
+        }
+      : { options: { type: Object, required: true } },
     methods: {
-      render: function(options) {
-        var opts = options || {};
-        opts.chart = opts.chart || {};
-        opts.chart.renderTo = this.$el;
-        this._chart = new Ctor(opts);
+      _renderChart: function() {
+        if (isRenderer) {
+          this.renderer = new Ctor(this.$el, this.width, this.height);
+        } else {
+          var opts = JSON.parse(JSON.stringify(this.options));
+          opts.chart = opts.chart || {};
+          opts.chart.renderTo = this.$el;
+          this.chart = new Ctor(opts);
+        }
       }
     },
     mounted: function() {
-      this.render(this.options);
+      this._renderChart();
     },
     beforeDestroy: function() {
-      this._chart.destroy();
+      !isRenderer && this.chart.destroy();
     }
   };
 }

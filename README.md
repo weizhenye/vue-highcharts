@@ -22,7 +22,7 @@ import VueHighcharts from 'vue-highcharts';
 Vue.use(VueHighcharts);
 ```
 
-If you want to use Highstock, Highmaps or any add-ons, you should pass in the `Highcharts` object [which included the corresponding modules](http://www.highcharts.com/docs/getting-started/install-from-npm).
+If you want to use Highstock, Highmaps or any other add-ons, you should pass in the `Highcharts` object [which included the corresponding modules](http://www.highcharts.com/docs/getting-started/install-from-npm).
 
 ```js
 // Use Highstock
@@ -45,12 +45,27 @@ loadMap(Highcharts);
 Vue.use(VueHighcharts, { Highcharts });
 ```
 
-Then you can use the component in your template. And you can access the `Highcharts` object via `vm.Highcharts`.
+Then you can use the components in your template.
 
 ```html
 <highcharts :options="options"></highcharts>
 <highstock :options="options"></highstock>
 <highmaps :options="options"></highmaps>
+<highcharts-renderer :width="width" :height="height"></highcharts-renderer>
 ```
 
 The `options` object can be found in [Highcharts API Reference](http://api.highcharts.com/highcharts), [Highstock API Reference](http://api.highcharts.com/highstock) and [Highmaps API Reference](http://api.highcharts.com/highmaps).
+
+`<highcharts-renderer>` [creates an independent renderer](http://api.highcharts.com/highcharts/Renderer).
+
+The `Highcharts` object is available at `vm.Highcharts`. If you want to access the `chart` or `renderer` instance, you can use child component refs:
+
+```html
+<highcharts :options="options" ref="highcharts"></highcharts>
+<highcharts-renderer :width="width" :height="height" ref="highchartsRenderer"></highcharts-renderer>
+```
+
+```js
+const { chart } = vm.$refs.highcharts;
+const { renderer } = vm.$refs.highchartsRenderer;
+```

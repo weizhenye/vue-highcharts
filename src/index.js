@@ -1,13 +1,14 @@
 import HighchartsOnly from 'highcharts';
+import ctors from './constrators.js';
 import create from './create.js';
 
 function install(Vue, options) {
   var Highcharts = (options && options.Highcharts) || HighchartsOnly;
   Vue.prototype.Highcharts = Highcharts;
-  ['highcharts', 'highstock', 'highmaps'].forEach(function(tagName) {
+  for (var tagName in ctors) {
     var component = create(tagName, Highcharts);
     component && Vue.component(tagName, component);
-  });
+  }
 }
 
 export default install;
