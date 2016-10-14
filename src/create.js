@@ -32,6 +32,10 @@ function create(tagName, Highcharts) {
     },
     beforeDestroy: function() {
       !isRenderer && this.chart.destroy();
+    },
+    // compat Vue v1.x
+    ready: function() {
+      this._renderChart();
     }
   };
 }
