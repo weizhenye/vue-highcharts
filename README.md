@@ -54,7 +54,7 @@ Then you can use the components in your template.
 <highcharts-renderer :width="width" :height="height"></highcharts-renderer>
 ```
 
-The `options` object can be found in [Highcharts API Reference](http://api.highcharts.com/highcharts), [Highstock API Reference](http://api.highcharts.com/highstock) and [Highmaps API Reference](http://api.highcharts.com/highmaps).
+The `options` object can be found in [Highcharts API Reference](http://api.highcharts.com/highcharts).
 
 `<highcharts-renderer>` [creates an independent renderer](http://api.highcharts.com/highcharts/Renderer).
 
@@ -69,3 +69,9 @@ The `Highcharts` object is available at `vm.Highcharts`. If you want to access t
 const { chart } = vm.$refs.highcharts;
 const { renderer } = vm.$refs.highchartsRenderer;
 ```
+
+## Demo
+
+* [Access `chart` instance via refs](https://codepen.io/weizhenye/pen/rrKgbP)
+* [Use Highmaps](https://codepen.io/weizhenye/pen/VKdJpW)
+* [Use independent Renderer](https://codepen.io/weizhenye/pen/kkpKvY)
