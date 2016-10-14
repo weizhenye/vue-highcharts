@@ -33,7 +33,7 @@ function create(tagName, Highcharts) {
         if (isRenderer) {
           this.renderer = new Ctor(this.$el, this.width, this.height);
         } else {
-          var opts = JSON.parse(JSON.stringify(this.options));
+          var opts = this.options || {};
           opts.chart = opts.chart || {};
           opts.chart.renderTo = this.$el;
           this.chart = new Ctor(opts);
@@ -45,6 +45,10 @@ function create(tagName, Highcharts) {
     },
     beforeDestroy: function() {
       !isRenderer && this.chart.destroy();
+    },
+    // compat Vue v1.x
+    ready: function() {
+      this._renderChart();
     }
   };
 }
