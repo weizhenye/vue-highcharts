@@ -43,6 +43,9 @@ function create(tagName, Highcharts) {
     mounted: function() {
       this._renderChart();
     },
+    updated: function() {
+      this._renderChart();
+    },
     beforeDestroy: function() {
       !isRenderer && this.chart.destroy();
     },
