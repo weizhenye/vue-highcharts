@@ -1,5 +1,8 @@
 # vue-highcharts
 
+[![Build status](https://img.shields.io/travis/weizhenye/vue-highcharts.svg)](https://travis-ci.org/weizhenye/vue-highcharts)
+[![Coverage](https://img.shields.io/coveralls/weizhenye/vue-highcharts/master.svg)](https://coveralls.io/github/weizhenye/vue-highcharts?branch=master)
+[![Dependencies](https://img.shields.io/david/weizhenye/vue-highcharts.svg)](https://david-dm.org/weizhenye/vue-highcharts)
 [![NPM version](https://img.shields.io/npm/v/vue-highcharts.svg)](https://www.npmjs.com/package/vue-highcharts)
 [![License](https://img.shields.io/npm/l/vue-highcharts.svg)](https://github.com/weizhenye/vue-highcharts/blob/master/LICENSE)
 

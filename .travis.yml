@@ -1,0 +1,8 @@
+sudo: required
+dist: trusty
+language: node_js
+node_js:
+  - "6"
+after_success:
+  - npm install coveralls
+  - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
