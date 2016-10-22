@@ -29,29 +29,45 @@ function create(tagName, Highcharts) {
         }
       : { options: { type: Object, required: true } },
     methods: {
+      _init: function() {
+        this._renderChart();
+        if (isRenderer) {
+          this.$watch('width', this._renderChart);
+          this.$watch('height', this._renderChart);
+        } else {
+          this.$watch('options', this._renderChart, { deep: true });
+        }
+      },
       _renderChart: function() {
         if (isRenderer) {
+          this.renderer && this.$el.removeChild(this.renderer.box);
           this.renderer = new Ctor(this.$el, this.width, this.height);
         } else {
-          var opts = this.options || {};
-          opts.chart = opts.chart || {};
-          opts.chart.renderTo = this.$el;
-          this.chart = new Ctor(opts);
+          var opts = {};
+          for (var property in this.options) {
+            opts[property] = this.options[property];
+          }
+          this.chart = new Ctor(this.$el, opts);
         }
       }
     },
     mounted: function() {
-      this._renderChart();
-    },
-    updated: function() {
-      this._renderChart();
+      this._init();
     },
     beforeDestroy: function() {
-      !isRenderer && this.chart.destroy();
+      if (isRenderer) {
+        this.$el.removeChild(this.renderer.box);
+        for (var property in this.renderer) {
+          delete this.renderer[property];
+        }
+        this.renderer = null;
+      } else {
+        this.chart.destroy();
+      }
     },
     // compat Vue v1.x
     ready: function() {
-      this._renderChart();
+      this._init();
     }
   };
 }
