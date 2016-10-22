@@ -4,5 +4,8 @@ language: node_js
 node_js:
   - "6"
 after_success:
-  - npm install coveralls
-  - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
+  - |
+    if [ $TRAVIS_PULL_REQUEST = "false" ]; then
+      npm install coveralls
+      cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
+    fi
