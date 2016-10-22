@@ -7,10 +7,11 @@ module.exports = function(config) {
       'node_modules/vue/dist/vue.js',
       'node_modules/highcharts/highstock.js',
       'node_modules/highcharts/modules/map.js',
+      'src/index.js',
       'test/test.js'
     ],
     preprocessors: {
-      'test/test.js': ['rollup', 'coverage']
+      'src/index.js': ['rollup', 'coverage']
     },
     rollupPreprocessor: {
       format: 'iife',

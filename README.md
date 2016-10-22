@@ -63,7 +63,7 @@ Then you can use the components in your template.
 <highcharts-renderer :width="width" :height="height"></highcharts-renderer>
 ```
 
-The `options` object can be found in [Highcharts API Reference](http://api.highcharts.com/highcharts).
+The `options` object can be found in [Highcharts API Reference](http://api.highcharts.com/highcharts). Note you should never pass in `chart.renderTo` for watching it may cause stack overflow.
 
 `<highcharts-renderer>` [creates an independent renderer](http://api.highcharts.com/highcharts/Renderer).
 
