@@ -35,7 +35,7 @@
   },
   "homepage": "https://github.com/weizhenye/vue-highcharts#readme",
   "peerDependencies": {
-    "highcharts": "*"
+    "highcharts": ">=4.2.0"
   },
   "devDependencies": {
     "chai": "^3.5.0",
