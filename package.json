@@ -9,7 +9,8 @@
     "src"
   ],
   "scripts": {
-    "test": "karma start",
+    "lint": "eslint src test",
+    "test": "npm run lint && karma start",
     "bundle": "rollup src/index.js -f umd -n VueHighcharts -g highcharts:Highcharts -o dist/vue-highcharts.js",
     "minify": "uglifyjs dist/vue-highcharts.js -m -o dist/vue-highcharts.min.js",
     "build": "npm run bundle && npm run minify",
@@ -39,6 +40,8 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
+    "eslint": "^3.8.1",
+    "eslint-config-google": "^0.7.0",
     "highcharts": "^5.0.0",
     "karma": "^1.3.0",
     "karma-chai": "^0.1.0",

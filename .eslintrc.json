@@ -1,0 +1,17 @@
+{
+  "extends": ["eslint:recommended", "google"],
+  "env": {
+    "browser": true
+  },
+  "parserOptions": {
+    "sourceType": "module"
+  },
+  "rules": {
+    "comma-dangle": [2, "only-multiline"],
+    "guard-for-in": 1,
+    "no-var": 0,
+    "object-curly-spacing": [2, "always"],
+    "quote-props": [2, "as-needed"],
+    "require-jsdoc": 0
+  }
+}
