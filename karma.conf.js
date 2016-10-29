@@ -21,7 +21,7 @@ module.exports = function(config) {
         vue: 'Vue'
       }
     },
-    reporters: ['progress', 'coverage'],
+    reporters: ['dots', 'coverage'],
     coverageReporter: {
       type: 'lcov',
       subdir: '.'

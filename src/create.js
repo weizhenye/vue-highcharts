@@ -1,3 +1,4 @@
+import clone from './clone.js';
 import ctors from './constrators.js';
 
 function create(tagName, Highcharts) {
@@ -30,11 +31,7 @@ function create(tagName, Highcharts) {
           this.renderer && this.$el.removeChild(this.renderer.box);
           this.renderer = new Ctor(this.$el, this.width, this.height);
         } else {
-          var opts = {};
-          for (var property in this.options) {
-            opts[property] = this.options[property];
-          }
-          this.chart = new Ctor(this.$el, opts);
+          this.chart = new Ctor(this.$el, clone(this.options));
         }
       }
     },
