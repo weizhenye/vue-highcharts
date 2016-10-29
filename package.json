@@ -1,6 +1,6 @@
 {
   "name": "vue-highcharts",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Highcharts component for Vue",
   "main": "dist/vue-highcharts.js",
   "jsnext:main": "src/index.js",

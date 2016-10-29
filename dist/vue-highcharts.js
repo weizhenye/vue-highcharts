@@ -13,6 +13,28 @@ var ctors = {
   'highcharts-renderer': 'Renderer'
 };
 
+/* istanbul ignore next */
+function clone(obj) {
+  var copy;
+  if (obj === null || typeof obj !== 'object') {
+    return obj;
+  }
+  if (obj instanceof Array) {
+    copy = [];
+    for (var i = obj.length - 1; i >= 0; i--) {
+      copy[i] = clone(obj[i]);
+    }
+    return copy;
+  }
+  if (obj instanceof Object) {
+    copy = {};
+    for (var key in obj) {
+      copy[key] = clone(obj[key]);
+    }
+    return copy;
+  }
+}
+
 function create(tagName, Highcharts) {
   var Ctor = Highcharts[ctors[tagName]];
   if (!Ctor) {
@@ -43,11 +65,7 @@ function create(tagName, Highcharts) {
           this.renderer && this.$el.removeChild(this.renderer.box);
           this.renderer = new Ctor(this.$el, this.width, this.height);
         } else {
-          var opts = {};
-          for (var property in this.options) {
-            opts[property] = this.options[property];
-          }
-          this.chart = new Ctor(this.$el, opts);
+          this.chart = new Ctor(this.$el, clone(this.options));
         }
       }
     },
