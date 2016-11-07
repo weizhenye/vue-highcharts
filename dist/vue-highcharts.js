@@ -51,7 +51,7 @@ function create(tagName, Highcharts) {
         }
       : { options: { type: Object, required: true } },
     methods: {
-      _init: function() {
+      _initChart: function() {
         this._renderChart();
         if (isRenderer) {
           this.$watch('width', this._renderChart);
@@ -70,7 +70,7 @@ function create(tagName, Highcharts) {
       }
     },
     mounted: function() {
-      this._init();
+      this._initChart();
     },
     beforeDestroy: function() {
       if (isRenderer) {
@@ -85,7 +85,7 @@ function create(tagName, Highcharts) {
     },
     // compat Vue v1.x
     ready: function() {
-      this._init();
+      this._initChart();
     }
   };
 }
