@@ -35,17 +35,14 @@ function clone(obj) {
   }
 }
 
-function create(tagName, Highcharts) {
+function create(tagName, Highcharts, Vue) {
   var Ctor = Highcharts[ctors[tagName]];
   if (!Ctor) {
     return null;
   }
   var isRenderer = tagName === 'highcharts-renderer';
-  return {
+  var component = {
     name: tagName,
-    render: function(createElement) {
-      return createElement('div');
-    },
     props: isRenderer
       ? {
           width: { type: Number, required: true },
@@ -71,9 +68,6 @@ function create(tagName, Highcharts) {
         }
       }
     },
-    mounted: function() {
-      this._initChart();
-    },
     beforeDestroy: function() {
       if (isRenderer) {
         this.$el.removeChild(this.renderer.box);
@@ -84,19 +78,30 @@ function create(tagName, Highcharts) {
       } else {
         this.chart.destroy();
       }
-    },
-    // compat Vue v1.x
-    ready: function() {
-      this._initChart();
     }
   };
+  var isVue1 = /^1\./.test(Vue.version);
+  if (isVue1) {
+    component.template = '<div></div>';
+    component.ready = function() {
+      this._initChart();
+    };
+  } else {
+    component.render = function(createElement) {
+      return createElement('div');
+    };
+    component.mounted = function() {
+      this._initChart();
+    };
+  }
+  return component;
 }
 
 function install(Vue, options) {
   var Highcharts = (options && options.Highcharts) || HighchartsOnly;
   Vue.prototype.Highcharts = Highcharts;
   for (var tagName in ctors) {
-    var component = create(tagName, Highcharts);
+    var component = create(tagName, Highcharts, Vue);
     component && Vue.component(tagName, component);
   }
 }
