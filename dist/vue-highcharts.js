@@ -43,7 +43,9 @@ function create(tagName, Highcharts) {
   var isRenderer = tagName === 'highcharts-renderer';
   return {
     name: tagName,
-    template: '<div></div>',
+    render: function(createElement) {
+      return createElement('div');
+    },
     props: isRenderer
       ? {
           width: { type: Number, required: true },
