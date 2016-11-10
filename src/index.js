@@ -6,7 +6,7 @@ function install(Vue, options) {
   var Highcharts = (options && options.Highcharts) || HighchartsOnly;
   Vue.prototype.Highcharts = Highcharts;
   for (var tagName in ctors) {
-    var component = create(tagName, Highcharts);
+    var component = create(tagName, Highcharts, Vue);
     component && Vue.component(tagName, component);
   }
 }
