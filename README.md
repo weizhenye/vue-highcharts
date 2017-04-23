@@ -3,6 +3,7 @@
 [![Build status](https://img.shields.io/travis/weizhenye/vue-highcharts.svg)](https://travis-ci.org/weizhenye/vue-highcharts)
 [![Coverage](https://img.shields.io/coveralls/weizhenye/vue-highcharts/master.svg)](https://coveralls.io/github/weizhenye/vue-highcharts?branch=master)
 [![Dependencies](https://img.shields.io/david/weizhenye/vue-highcharts.svg)](https://david-dm.org/weizhenye/vue-highcharts)
+[![Download](https://img.shields.io/npm/dm/vue-highcharts.svg)](https://www.npmjs.com/package/vue-highcharts)
 [![NPM version](https://img.shields.io/npm/v/vue-highcharts.svg)](https://www.npmjs.com/package/vue-highcharts)
 [![License](https://img.shields.io/npm/l/vue-highcharts.svg)](https://github.com/weizhenye/vue-highcharts/blob/master/LICENSE)
 [![File size](https://badge-size.herokuapp.com/weizhenye/vue-highcharts/master/dist/vue-highcharts.min.js?compression=gzip&color=blue&label=min%2Bgzip)](https://unpkg.com/vue-highcharts/dist/vue-highcharts.min.js)
@@ -11,7 +12,7 @@ Highcharts component for Vue.
 
 ## Requirements
 
-* Vue >= 1.0.0
+* Vue >= 1.0.0 (support both v1 and v2)
 * Highcharts >= 4.2.0
 
 ## Installation
