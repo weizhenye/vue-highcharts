@@ -1,5 +1,5 @@
 import clone from './clone.js';
-import ctors from './constrators.js';
+import ctors from './constructors.js';
 
 function render(createElement) {
   return createElement('div');

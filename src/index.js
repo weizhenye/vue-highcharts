@@ -1,5 +1,5 @@
 import HighchartsOnly from 'highcharts';
-import ctors from './constrators.js';
+import ctors from './constructors.js';
 import create from './create.js';
 
 function install(Vue, options) {
