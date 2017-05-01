@@ -1,10 +1,19 @@
 import clone from './clone.js';
 import ctors from './constrators.js';
 
+function render(createElement) {
+  return createElement('div');
+}
+
 function create(tagName, Highcharts, Vue) {
   var Ctor = Highcharts[ctors[tagName]];
   if (!Ctor) {
-    return null;
+    return Highcharts.win
+      ? null
+      // When running in server, Highcharts will not be instanced,
+      // so there're no constructors in Highcharts,
+      // to avoid unmated content during SSR, it returns minimum component.
+      : { render: render };
   }
   var isRenderer = tagName === 'highcharts-renderer';
   var component = {
@@ -53,9 +62,7 @@ function create(tagName, Highcharts, Vue) {
       this._initChart();
     };
   } else {
-    component.render = function(createElement) {
-      return createElement('div');
-    };
+    component.render = render;
     component.mounted = function() {
       this._initChart();
     };
@@ -64,4 +71,3 @@ function create(tagName, Highcharts, Vue) {
 }
 
 export default create;
-
