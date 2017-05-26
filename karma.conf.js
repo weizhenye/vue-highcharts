@@ -7,11 +7,10 @@ module.exports = function(config) {
       'node_modules/vue/dist/vue.js',
       'node_modules/highcharts/highstock.js',
       'node_modules/highcharts/modules/map.js',
-      'src/index.js',
       'test/test.js'
     ],
     preprocessors: {
-      'src/index.js': ['rollup', 'coverage']
+      'test/test.js': ['rollup']
     },
     rollupPreprocessor: {
       format: 'iife',
@@ -19,7 +18,12 @@ module.exports = function(config) {
       globals: {
         highcharts: 'Highcharts',
         vue: 'Vue'
-      }
+      },
+      plugins: [
+        require('rollup-plugin-istanbul')({
+          exclude: ['test/**/*.js']
+        })
+      ]
     },
     reporters: ['dots', 'coverage'],
     coverageReporter: {

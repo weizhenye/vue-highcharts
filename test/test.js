@@ -7,9 +7,13 @@
  * Old version of Vue and Highcharts should be tested manually.
  */
 
-/* global expect, Vue, Highcharts, VueHighcharts */
+/* global expect, Vue, Highcharts */
 /* eslint-env mocha */
 /* eslint max-len: 0 */
+
+import VueHighcharts from '../src/index.js';
+import clone from '../src/clone.js';
+
 describe('vue-highcharts', function() {
   var createVM = function(template) {
     return new Vue({
@@ -126,5 +130,18 @@ describe('vue-highcharts', function() {
       expect(vm.$refs.highchartsRenderer.renderer.height).to.equal(300);
       done();
     });
+  });
+});
+
+describe('clone', function() {
+  it('should clone object', function() {
+    var obj = {
+      arr: [{ a: 1 }, 2, '3', null, undefined, false],
+      num: 1,
+      str: '2',
+      bool: false,
+      obj: { a: 1 }
+    };
+    expect(clone(obj)).to.deep.equal(obj);
   });
 });
