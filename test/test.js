@@ -41,8 +41,8 @@ describe('vue-highcharts', function() {
     componentHelper(done, '<highstock :options="{}"></highstock>');
   });
 
-  it('should support <highstock> component', function(done) {
-    componentHelper(done, '<highstock :options="{}"></highstock>');
+  it('should support <highmaps> component', function(done) {
+    componentHelper(done, '<highmaps :options="{}"></highmaps>');
   });
 
   it('should support <highcharts-renderer> component', function(done) {

@@ -10,7 +10,8 @@
   ],
   "scripts": {
     "lint": "eslint src test",
-    "test": "npm run lint && karma start",
+    "unit": "karma start",
+    "test": "npm run lint && npm run unit",
     "bundle": "rollup src/index.js -f umd -n VueHighcharts -g highcharts:Highcharts -o dist/vue-highcharts.js",
     "minify": "uglifyjs dist/vue-highcharts.js -m -o dist/vue-highcharts.min.js",
     "build": "npm run bundle && npm run minify",
@@ -40,21 +41,20 @@
     "vue": ">=1.0.0"
   },
   "devDependencies": {
-    "chai": "^4.0.0",
-    "eslint": "^3.19.0",
-    "eslint-config-google": "^0.7.1",
-    "highcharts": "^5.0.12",
-    "karma": "^1.7.0",
+    "chai": "^4.1.2",
+    "eslint": "^4.8.0",
+    "eslint-config-google": "^0.9.1",
+    "highcharts": "^6.0.1",
+    "karma": "^1.7.1",
     "karma-chai": "^0.1.0",
+    "karma-chrome-launcher": "^2.2.0",
     "karma-coverage": "^1.1.1",
     "karma-mocha": "^1.3.0",
-    "karma-phantomjs-launcher": "^1.0.4",
-    "karma-rollup-plugin": "^0.2.4",
-    "mocha": "^3.4.2",
-    "phantomjs-prebuilt": "^2.1.14",
-    "rollup": "^0.41.6",
+    "karma-rollup-preprocessor": "^5.0.1",
+    "mocha": "^4.0.1",
+    "rollup": "^0.50.0",
     "rollup-plugin-istanbul": "^1.1.0",
-    "uglify-js": "^3.0.11",
-    "vue": "^2.3.3"
+    "uglify-js": "^3.1.3",
+    "vue": "^2.4.4"
   }
 }

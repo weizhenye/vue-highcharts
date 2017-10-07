@@ -32,27 +32,23 @@ import VueHighcharts from 'vue-highcharts';
 Vue.use(VueHighcharts);
 ```
 
-If you want to use Highstock, Highmaps or any other add-ons, you should pass in the `Highcharts` object [which included the corresponding modules](http://www.highcharts.com/docs/getting-started/install-from-npm).
+If you want to use Highstock, Highmaps or any other add-ons, you should pass in the `Highcharts` object [which included the corresponding modules](https://www.highcharts.com/docs/getting-started/install-from-npm).
 
 ```js
-// Use Highstock
 import Vue from 'vue';
 import VueHighcharts from 'vue-highcharts';
-import Highcharts from 'highcharts/highstock';
+import Highcharts from 'highcharts';
 
-Vue.use(VueHighcharts, { Highcharts });
-```
-
-```js
-// Use Highstock and Highmaps
-import Vue from 'vue';
-import VueHighcharts from 'vue-highcharts';
-import Highcharts from 'highcharts/highstock';
+import loadStock from 'highcharts/modules/stock';
 import loadMap from 'highcharts/modules/map';
+import loadDrilldown from 'highcharts/modules/drilldown';
 
+loadStock(Highcharts);
 loadMap(Highcharts);
+loadDrillDown(Highcharts);
 
 Vue.use(VueHighcharts, { Highcharts });
+// Now you can use Highstock, Highmaps and drilldown.
 ```
 
 Then you can use the components in your template.
@@ -64,9 +60,9 @@ Then you can use the components in your template.
 <highcharts-renderer :width="width" :height="height"></highcharts-renderer>
 ```
 
-The `options` object can be found in [Highcharts API Reference](http://api.highcharts.com/highcharts). Note you should never pass in `chart.renderTo` for watching it may cause stack overflow.
+The `options` object can be found in [Highcharts API Reference](https://api.highcharts.com/highcharts). Note you should never pass in `chart.renderTo` for watching it may cause stack overflow.
 
-`<highcharts-renderer>` [creates an independent renderer](http://api.highcharts.com/highcharts/Renderer).
+`<highcharts-renderer>` [creates an independent renderer](https://api.highcharts.com/class-reference/Highcharts.SVGRenderer).
 
 The `Highcharts` object is available at `vm.Highcharts`. If you want to access the `chart` or `renderer` instance, you can use child component refs:
 

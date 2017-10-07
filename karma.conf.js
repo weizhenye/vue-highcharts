@@ -2,10 +2,11 @@ module.exports = function(config) {
   config.set({
     singleRun: true,
     frameworks: ['mocha', 'chai'],
-    browsers: ['PhantomJS'],
+    browsers: ['ChromeHeadless'],
     files: [
       'node_modules/vue/dist/vue.js',
-      'node_modules/highcharts/highstock.js',
+      'node_modules/highcharts/highcharts.js',
+      'node_modules/highcharts/modules/stock.js',
       'node_modules/highcharts/modules/map.js',
       'test/test.js'
     ],
@@ -14,7 +15,6 @@ module.exports = function(config) {
     },
     rollupPreprocessor: {
       format: 'iife',
-      moduleName: 'VueHighcharts',
       globals: {
         highcharts: 'Highcharts',
         vue: 'Vue'
