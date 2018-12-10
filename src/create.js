@@ -15,7 +15,7 @@ function create(tagName, Highcharts, Vue) {
       // to avoid unmated content during SSR, it returns minimum component.
       : { render: render };
   }
-  var isRenderer = tagName === 'highcharts-renderer';
+  var isRenderer = tagName === 'HighchartsRenderer';
   var component = {
     name: tagName,
     props: isRenderer
