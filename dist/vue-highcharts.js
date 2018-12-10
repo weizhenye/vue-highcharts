@@ -4,16 +4,15 @@
 	(global.VueHighcharts = factory(global.Highcharts));
 }(this, (function (HighchartsOnly) { 'use strict';
 
-HighchartsOnly = 'default' in HighchartsOnly ? HighchartsOnly['default'] : HighchartsOnly;
+HighchartsOnly = HighchartsOnly && HighchartsOnly.hasOwnProperty('default') ? HighchartsOnly['default'] : HighchartsOnly;
 
 var ctors = {
-  highcharts: 'Chart',
-  highstock: 'StockChart',
-  highmaps: 'Map',
-  'highcharts-renderer': 'Renderer'
+  Highcharts: 'Chart',
+  Highstock: 'StockChart',
+  Highmaps: 'Map',
+  HighchartsRenderer: 'Renderer'
 };
 
-/* istanbul ignore next */
 function clone(obj) {
   var copy;
   if (obj === null || typeof obj !== 'object') {
@@ -26,6 +25,7 @@ function clone(obj) {
     }
     return copy;
   }
+  /* istanbul ignore else */
   if (obj instanceof Object) {
     copy = {};
     for (var key in obj) {
@@ -49,7 +49,7 @@ function create(tagName, Highcharts, Vue) {
       // to avoid unmated content during SSR, it returns minimum component.
       : { render: render };
   }
-  var isRenderer = tagName === 'highcharts-renderer';
+  var isRenderer = tagName === 'HighchartsRenderer';
   var component = {
     name: tagName,
     props: isRenderer
