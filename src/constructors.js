@@ -1,6 +1,6 @@
 export default {
-  Highcharts: 'Chart',
-  Highstock: 'StockChart',
-  Highmaps: 'Map',
-  HighchartsRenderer: 'Renderer'
+  Highcharts: 'chart',
+  Highstock: 'stockChart',
+  Highmaps: 'mapChart',
+  HighchartsGantt: 'ganttChart',
 };

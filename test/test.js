@@ -9,86 +9,68 @@
 
 /* global expect, Vue, Highcharts */
 /* eslint-env mocha */
-/* eslint max-len: 0 */
+/* eslint-disable max-len, no-unused-expressions */
 
-import VueHighcharts from '../src/index.js';
+import VueHighcharts, { genComponent } from '../src/index.js';
 import clone from '../src/clone.js';
 
-describe('vue-highcharts', function() {
-  var createVM = function(template) {
+describe('vue-highcharts', function () {
+  var createVM = function (template) {
     return new Vue({
       el: document.createElement('div'),
       template: template
     });
   };
-  var componentHelper = function(done, template) {
+  var componentHelper = function (template) {
     var vm = createVM(template);
-    vm.$nextTick(function() {
+    return vm.$nextTick().then(function () {
       expect(vm.$el.querySelector('.highcharts-root')).to.exist;
-      done();
     });
   };
 
-  before(function() {
+  before(function () {
     Vue.use(VueHighcharts, { Highcharts: Highcharts });
   });
 
-  it('should support <highcharts> component', function(done) {
-    componentHelper(done, '<highcharts :options="{}"></highcharts>');
+  it('should support <highcharts> component', function () {
+    return componentHelper('<highcharts :options="{}"></highcharts>');
   });
 
-  it('should support <highstock> component', function(done) {
-    componentHelper(done, '<highstock :options="{}"></highstock>');
+  it('should support <highstock> component', function () {
+    return componentHelper('<highstock :options="{}"></highstock>');
   });
 
-  it('should support <highmaps> component', function(done) {
-    componentHelper(done, '<highmaps :options="{}"></highmaps>');
+  it('should support <highmaps> component', function () {
+    return componentHelper('<highmaps :options="{}"></highmaps>');
   });
 
-  it('should support <highcharts-renderer> component', function(done) {
-    componentHelper(done, '<highcharts-renderer :width="400" :height="300"></highcharts-renderer>');
+  it('should support <highcharts-gantt> component', function () {
+    return componentHelper('<highcharts-gantt :options="{ series: [] }"></highcharts-gantt>');
   });
 
-  it('can access the `chart` instance via refs', function(done) {
+  it('can access the `chart` instance via refs', function () {
     var vm = createVM('<highcharts :options="{}" ref="highcharts"></highcharts>');
-    vm.$nextTick(function() {
+    return vm.$nextTick().then(function () {
       expect(vm.$refs.highcharts.chart).to.be.an('object');
-      done();
     });
   });
 
-  it('can access the `renderer` instance via refs', function(done) {
-    var vm = createVM('<highcharts-renderer :width="400" :height="300" ref="highchartsRenderer"></highcharts-renderer>');
-    vm.$nextTick(function() {
-      expect(vm.$refs.highchartsRenderer.renderer).to.be.an('object');
-      done();
-    });
-  });
-
-  it('should destroy the chart instance when vm destroyed', function(done) {
+  it('should destroy the chart instance when vm destroyed', function (done) {
     var chart = null;
-    var renderer = null;
     var el = null;
     var vm = new Vue({
       el: document.createElement('div'),
-      template:
-        '<div>' +
-          '<highcharts :options="{}" ref="highcharts"></highcharts>' +
-          '<highcharts-renderer :width="400" :height="300" ref="highchartsRenderer"></highcharts-renderer>' +
-        '</div>',
-      beforeDestroy: function() {
+      template: '<div><highcharts :options="{}" ref="highcharts"></highcharts></div>',
+      beforeDestroy: function () {
         el = vm.$el;
         chart = vm.$refs.highcharts.chart;
-        renderer = vm.$refs.highchartsRenderer.renderer;
         expect(el.querySelector('.highcharts-root')).to.exist;
         expect(chart).to.not.be.empty;
-        expect(renderer).to.not.be.empty;
       },
-      destroyed: function() {
-        this.$nextTick(function() {
+      destroyed: function () {
+        this.$nextTick(function () {
           expect(el.querySelector('.highcharts-root')).to.not.exist;
           expect(chart).to.be.empty;
-          expect(renderer).to.be.empty;
           done();
         });
       }
@@ -96,7 +78,7 @@ describe('vue-highcharts', function() {
     vm.$destroy();
   });
 
-  it('should watch `options`', function(done) {
+  it('should watch `options`', function () {
     var vm = new Vue({
       el: document.createElement('div'),
       template: '<highcharts :options="options" ref="highcharts"></highcharts>',
@@ -106,35 +88,24 @@ describe('vue-highcharts', function() {
     });
     expect(vm.$refs.highcharts.chart.title.textStr).to.equal('origin');
     vm.options.title.text = 'changed';
-    vm.$nextTick(function() {
+    return vm.$nextTick().then(function () {
       expect(vm.$refs.highcharts.chart.title.textStr).to.equal('changed');
-      done();
     });
   });
 
-  it('should watch `width` and `height`', function(done) {
-    var vm = new Vue({
-      el: document.createElement('div'),
-      template: '<highcharts-renderer :width="width" :height="height" ref="highchartsRenderer"></highcharts-renderer>',
-      data: {
-        width: 100,
-        height: 100
-      }
+  it('can generate single Componet', function () {
+    var names = ['Highcharts', 'Highstock', 'Highmaps', 'HighchartsGantt'];
+    names.forEach(function (name) {
+      var Component = genComponent(name, window.Highcharts);
+      expect(Component.name).to.equal(name);
     });
-    expect(vm.$refs.highchartsRenderer.renderer.width).to.equal(100);
-    expect(vm.$refs.highchartsRenderer.renderer.height).to.equal(100);
-    vm.width = 400;
-    vm.height = 300;
-    vm.$nextTick(function() {
-      expect(vm.$refs.highchartsRenderer.renderer.width).to.equal(400);
-      expect(vm.$refs.highchartsRenderer.renderer.height).to.equal(300);
-      done();
-    });
+    var Unknown = genComponent('Unknown', window.Highcharts);
+    expect(Unknown).to.not.exist;
   });
 });
 
-describe('clone', function() {
-  it('should clone object', function() {
+describe('clone', function () {
+  it('should clone object', function () {
     var obj = {
       arr: [{ a: 1 }, 2, '3', null, undefined, false],
       num: 1,

@@ -15,6 +15,7 @@
     "bundle": "rollup src/index.js -f umd -n VueHighcharts -g highcharts:Highcharts -o dist/vue-highcharts.js",
     "minify": "uglifyjs dist/vue-highcharts.js -m -o dist/vue-highcharts.min.js",
     "build": "npm run bundle && npm run minify",
+    "dev": "npm run bundle -- -w",
     "preversion": "npm test",
     "version": "npm run build && git add -A dist",
     "postversion": "git push && git push --tags && npm publish"
@@ -35,26 +36,27 @@
   "bugs": {
     "url": "https://github.com/weizhenye/vue-highcharts/issues"
   },
-  "homepage": "https://github.com/weizhenye/vue-highcharts#readme",
+  "homepage": "https://github.com/weizhenye/vue-highcharts",
   "peerDependencies": {
     "highcharts": ">=4.2.0",
-    "vue": ">=1.0.0"
+    "vue": ">=2.0.0"
   },
   "devDependencies": {
-    "chai": "^4.1.2",
-    "eslint": "^4.8.0",
-    "eslint-config-google": "^0.9.1",
-    "highcharts": "^6.0.1",
-    "karma": "^1.7.1",
+    "chai": "^4.2.0",
+    "eslint": "^5.12.1",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.16.0",
+    "highcharts": "^7.0.2",
+    "karma": "^4.0.0",
     "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^2.2.0",
-    "karma-coverage": "^1.1.1",
+    "karma-coverage": "^1.1.2",
     "karma-mocha": "^1.3.0",
-    "karma-rollup-preprocessor": "^5.0.1",
-    "mocha": "^4.0.1",
-    "rollup": "^0.50.0",
-    "rollup-plugin-istanbul": "^1.1.0",
-    "uglify-js": "^3.1.3",
-    "vue": "^2.4.4"
+    "karma-rollup-preprocessor": "^6.1.2",
+    "mocha": "^5.2.0",
+    "rollup": "^0.68.2",
+    "rollup-plugin-istanbul": "^2.0.1",
+    "uglify-js": "^3.4.9",
+    "vue": "^2.5.22"
   }
 }

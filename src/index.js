@@ -2,13 +2,16 @@ import HighchartsOnly from 'highcharts';
 import ctors from './constructors.js';
 import create from './create.js';
 
-function install(Vue, options) {
+export default function install(Vue, options) {
   var Highcharts = (options && options.Highcharts) || HighchartsOnly;
-  Vue.prototype.Highcharts = Highcharts;
-  for (var tagName in ctors) {
-    var component = create(tagName, Highcharts, Vue);
-    component && Vue.component(tagName, component);
+  for (var name in ctors) {
+    var component = create(name, Highcharts);
+    component && Vue.component(name, component);
   }
 }
 
-export default install;
+if (typeof window !== 'undefined' && window.Vue && window.Highcharts) {
+  install(window.Vue, window.Highcharts);
+}
+
+export { create as genComponent };

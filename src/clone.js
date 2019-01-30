@@ -1,3 +1,4 @@
+// eslint-disable-next-line consistent-return
 export default function clone(obj) {
   var copy;
   if (obj === null || typeof obj !== 'object') {
