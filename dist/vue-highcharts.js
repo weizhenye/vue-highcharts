@@ -1,118 +1,98 @@
 (function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('highcharts')) :
-	typeof define === 'function' && define.amd ? define(['highcharts'], factory) :
-	(global.VueHighcharts = factory(global.Highcharts));
-}(this, (function (HighchartsOnly) { 'use strict';
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('highcharts')) :
+  typeof define === 'function' && define.amd ? define(['exports', 'highcharts'], factory) :
+  (global = global || self, factory(global.VueHighcharts = {}, global.Highcharts));
+}(this, function (exports, HighchartsOnly) { 'use strict';
 
-HighchartsOnly = HighchartsOnly && HighchartsOnly.hasOwnProperty('default') ? HighchartsOnly['default'] : HighchartsOnly;
+  HighchartsOnly = HighchartsOnly && HighchartsOnly.hasOwnProperty('default') ? HighchartsOnly['default'] : HighchartsOnly;
 
-var ctors = {
-  Highcharts: 'Chart',
-  Highstock: 'StockChart',
-  Highmaps: 'Map',
-  HighchartsRenderer: 'Renderer'
-};
+  var ctors = {
+    Highcharts: 'chart',
+    Highstock: 'stockChart',
+    Highmaps: 'mapChart',
+    HighchartsGantt: 'ganttChart',
+  };
 
-function clone(obj) {
-  var copy;
-  if (obj === null || typeof obj !== 'object') {
-    return obj;
-  }
-  if (obj instanceof Array) {
-    copy = [];
-    for (var i = obj.length - 1; i >= 0; i--) {
-      copy[i] = clone(obj[i]);
+  // eslint-disable-next-line consistent-return
+  function clone(obj) {
+    var copy;
+    if (obj === null || typeof obj !== 'object') {
+      return obj;
     }
-    return copy;
-  }
-  /* istanbul ignore else */
-  if (obj instanceof Object) {
-    copy = {};
-    for (var key in obj) {
-      copy[key] = clone(obj[key]);
+    if (obj instanceof Array) {
+      copy = [];
+      for (var i = obj.length - 1; i >= 0; i--) {
+        copy[i] = clone(obj[i]);
+      }
+      return copy;
     }
-    return copy;
+    /* istanbul ignore else */
+    if (obj instanceof Object) {
+      copy = {};
+      for (var key in obj) {
+        copy[key] = clone(obj[key]);
+      }
+      return copy;
+    }
   }
-}
 
-function render(createElement) {
-  return createElement('div');
-}
-
-function create(tagName, Highcharts, Vue) {
-  var Ctor = Highcharts[ctors[tagName]];
-  if (!Ctor) {
-    return Highcharts.win
-      ? null
-      // When running in server, Highcharts will not be instanced,
-      // so there're no constructors in Highcharts,
-      // to avoid unmated content during SSR, it returns minimum component.
-      : { render: render };
+  function render(createElement) {
+    return createElement('div');
   }
-  var isRenderer = tagName === 'HighchartsRenderer';
-  var component = {
-    name: tagName,
-    props: isRenderer
-      ? {
-          width: { type: Number, required: true },
-          height: { type: Number, required: true }
-        }
-      : { options: { type: Object, required: true } },
-    methods: {
-      _initChart: function() {
-        this._renderChart();
-        if (isRenderer) {
-          this.$watch('width', this._renderChart);
-          this.$watch('height', this._renderChart);
-        } else {
-          this.$watch('options', this._renderChart, { deep: true });
+
+  function create(name, Highcharts) {
+    var ctor = Highcharts[ctors[name]];
+    if (!ctor) {
+      return Highcharts.win
+        ? null
+        // When running in server, Highcharts will not be instanced,
+        // so there're no constructors in Highcharts,
+        // to avoid unmated content during SSR, it returns minimum component.
+        : { render: render };
+    }
+    return {
+      name: name,
+      props: {
+        options: { type: Object, required: true }
+      },
+      watch: {
+        options: {
+          handler: function () {
+            this.$_h_render();
+          },
+          deep: true
         }
       },
-      _renderChart: function() {
-        if (isRenderer) {
-          this.renderer && this.$el.removeChild(this.renderer.box);
-          this.renderer = new Ctor(this.$el, this.width, this.height);
-        } else {
-          this.chart = new Ctor(this.$el, clone(this.options));
-        }
-      }
-    },
-    beforeDestroy: function() {
-      if (isRenderer) {
-        this.$el.removeChild(this.renderer.box);
-        for (var property in this.renderer) {
-          delete this.renderer[property];
-        }
-        this.renderer = null;
-      } else {
+      mounted: function () {
+        this.$_h_render();
+      },
+      beforeDestroy: function () {
         this.chart.destroy();
-      }
+      },
+      methods: {
+        $_h_render: function () {
+          this.chart = ctor(this.$el, clone(this.options));
+        }
+      },
+      render: render
+    };
+  }
+
+  function install(Vue, options) {
+    var Highcharts = (options && options.Highcharts) || HighchartsOnly;
+    for (var name in ctors) {
+      var component = create(name, Highcharts);
+      component && Vue.component(name, component);
     }
-  };
-  var isVue1 = /^1\./.test(Vue.version);
-  if (isVue1) {
-    component.template = '<div></div>';
-    component.ready = function() {
-      this._initChart();
-    };
-  } else {
-    component.render = render;
-    component.mounted = function() {
-      this._initChart();
-    };
   }
-  return component;
-}
 
-function install(Vue, options) {
-  var Highcharts = (options && options.Highcharts) || HighchartsOnly;
-  Vue.prototype.Highcharts = Highcharts;
-  for (var tagName in ctors) {
-    var component = create(tagName, Highcharts, Vue);
-    component && Vue.component(tagName, component);
+  if (typeof window !== 'undefined' && window.Vue && window.Highcharts) {
+    install(window.Vue, window.Highcharts);
   }
-}
 
-return install;
+  exports.default = install;
+  exports.genComponent = create;
 
-})));
+  Object.defineProperty(exports, '__esModule', { value: true });
+
+}));
