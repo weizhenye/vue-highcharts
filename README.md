@@ -35,6 +35,8 @@ import VueHighcharts from 'vue-highcharts';
 Vue.use(VueHighcharts);
 ```
 
+When vue-highcharts is included by `<script>`, it will be installed automatically if `window.Vue` and `window.Highcharts` exists, ohterwise you should to install it manually by calling `Vue.use(window.VueHighcharts['default']);`.
+
 If you want to use Highstock, Highmaps, Gantt or any other [add-ons](https://github.com/highcharts/highcharts-dist/tree/master/modules), you should load them as modules.
 
 ```js
@@ -73,7 +75,7 @@ loadMap(Highcharts);
 
 export default {
   name: 'MyComponent',
-  component: {
+  components: {
     Highcharts: genComponent('Highcharts', Highcharts),
     Highmaps: genComponent('Highmaps', Highcharts),
     // Highstock: genComponent('Highstock', Highcharts),
