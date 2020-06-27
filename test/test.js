@@ -1,118 +1,111 @@
-/**
- * See https://github.com/npm/npm/issues/5499
- *
- * For it's impossible to install multiple versions of a dependency,
- * only latest version of Vue and Highcharts will be tested.
- *
- * Old version of Vue and Highcharts should be tested manually.
- */
+/* global describe, it, expect */
 
-/* global expect, Vue, Highcharts */
-/* eslint-env mocha */
-/* eslint-disable max-len, no-unused-expressions */
+import { createApp, ref, nextTick, onUnmounted, onBeforeUnmount } from 'vue';
+import Highcharts from 'highcharts';
+import loadStock from 'highcharts/modules/stock.js';
+import loadMap from 'highcharts/modules/map.js';
+import loadGantt from 'highcharts/modules/gantt.js';
+import VueHighcharts, { createHighcharts } from '../index.js';
 
-import VueHighcharts, { genComponent } from '../src/index.js';
-import clone from '../src/clone.js';
+loadStock(Highcharts);
+loadMap(Highcharts);
+loadGantt(Highcharts);
 
-describe('vue-highcharts', function () {
-  var createVM = function (template) {
-    return new Vue({
-      el: document.createElement('div'),
-      template: template
-    });
-  };
-  var componentHelper = function (template) {
-    var vm = createVM(template);
-    return vm.$nextTick().then(function () {
-      expect(vm.$el.querySelector('.highcharts-root')).to.exist;
-    });
-  };
-
-  before(function () {
-    Vue.use(VueHighcharts, { Highcharts: Highcharts });
-  });
-
-  it('should support <highcharts> component', function () {
-    return componentHelper('<highcharts :options="{}"></highcharts>');
-  });
-
-  it('should support <highstock> component', function () {
-    return componentHelper('<highstock :options="{}"></highstock>');
-  });
-
-  it('should support <highmaps> component', function () {
-    return componentHelper('<highmaps :options="{}"></highmaps>');
-  });
-
-  it('should support <highcharts-gantt> component', function () {
-    return componentHelper('<highcharts-gantt :options="{ series: [] }"></highcharts-gantt>');
-  });
-
-  it('can access the `chart` instance via refs', function () {
-    var vm = createVM('<highcharts :options="{}" ref="highcharts"></highcharts>');
-    return vm.$nextTick().then(function () {
-      expect(vm.$refs.highcharts.chart).to.be.an('object');
-    });
-  });
-
-  it('should destroy the chart instance when vm destroyed', function (done) {
-    var chart = null;
-    var el = null;
-    var vm = new Vue({
-      el: document.createElement('div'),
-      template: '<div><highcharts :options="{}" ref="highcharts"></highcharts></div>',
-      beforeDestroy: function () {
-        el = vm.$el;
-        chart = vm.$refs.highcharts.chart;
-        expect(el.querySelector('.highcharts-root')).to.exist;
-        expect(chart).to.not.be.empty;
+describe('vue-highcharts', () => {
+  function createComponent(Component) {
+    const app = createApp(Component);
+    app.use(VueHighcharts, { Highcharts });
+    return app.mount(document.createElement('div'));
+  }
+  function checkComponent(template) {
+    const root = createComponent({
+      template,
+      setup() {
+        return { $chart: ref(null) };
       },
-      destroyed: function () {
-        this.$nextTick(function () {
-          expect(el.querySelector('.highcharts-root')).to.not.exist;
-          expect(chart).to.be.empty;
-          done();
+    });
+    expect(root.$chart.$highcharts.querySelector('.highcharts-root')).toBeDefined();
+  }
+
+  it('should support <Highcharts /> component', () => {
+    checkComponent('<Highcharts ref="$chart" :options="{}" />');
+  });
+
+  it('should support <Highstock /> component', () => {
+    checkComponent('<Highstock ref="$chart" :options="{}" />');
+  });
+
+  it('should support <Highmaps /> component', () => {
+    checkComponent('<Highmaps ref="$chart" :options="{}" />');
+  });
+
+  it('should support <HighchartsGantt /> component', () => {
+    checkComponent('<HighchartsGantt ref="$chart" :options="{}" />');
+  });
+
+  it('can access the `chart` instance via template refs', () => {
+    const root = createComponent({
+      template: '<Highcharts ref="$chart" :options="{}" />',
+      setup() {
+        return { $chart: ref(null) };
+      },
+    });
+    expect(root.$chart.chart).toBeDefined();
+  });
+
+  it('should destroy the chart instance when vm destroyed', (done) => {
+    let chart = null;
+    let el = null;
+    const app = createApp({
+      template: '<div ref="$div"><Highcharts ref="$chart" :options="{}" /></div>',
+      setup() {
+        const $div = ref(null);
+        const $chart = ref(null);
+        onBeforeUnmount(() => {
+          el = $div.value;
+          chart = $chart.value.chart;
+          expect(el.querySelector('.highcharts-root')).toBeDefined();
+          expect(chart).toBeDefined();
         });
-      }
+        onUnmounted(() => {
+          nextTick(() => {
+            expect(el.querySelector('.highcharts-root')).toBeFalsy();
+            expect(chart).toEqual({});
+            done();
+          });
+        });
+        return { $div, $chart };
+      },
     });
-    vm.$destroy();
+    app.use(VueHighcharts, { Highcharts });
+    app.mount(document.createElement('div'));
+    app.unmount();
   });
 
-  it('should watch `options`', function () {
-    var vm = new Vue({
-      el: document.createElement('div'),
-      template: '<highcharts :options="options" ref="highcharts"></highcharts>',
-      data: {
-        options: { title: { text: 'origin' } }
-      }
+  it('should watch `options`', () => {
+    const root = createComponent({
+      template: '<Highcharts ref="$chart" :options="options" />',
+      setup() {
+        return {
+          $chart: ref(null),
+          options: ref({ title: { text: 'origin' } }),
+        };
+      },
     });
-    expect(vm.$refs.highcharts.chart.title.textStr).to.equal('origin');
-    vm.options.title.text = 'changed';
-    return vm.$nextTick().then(function () {
-      expect(vm.$refs.highcharts.chart.title.textStr).to.equal('changed');
+    expect(root.$chart.chart.title.textStr).toBe('origin');
+    root.options.title.text = 'changed';
+    nextTick().then(() => {
+      expect(root.$chart.chart.title.textStr).toBe('changed');
     });
   });
 
-  it('can generate single Componet', function () {
-    var names = ['Highcharts', 'Highstock', 'Highmaps', 'HighchartsGantt'];
-    names.forEach(function (name) {
-      var Component = genComponent(name, window.Highcharts);
-      expect(Component.name).to.equal(name);
+  it('can create single Componet', () => {
+    const names = ['Highcharts', 'Highstock', 'Highmaps', 'HighchartsGantt'];
+    names.forEach((name) => {
+      const Component = createHighcharts(name, Highcharts);
+      expect(Component.name).toEqual(name);
     });
-    var Unknown = genComponent('Unknown', window.Highcharts);
-    expect(Unknown).to.not.exist;
-  });
-});
-
-describe('clone', function () {
-  it('should clone object', function () {
-    var obj = {
-      arr: [{ a: 1 }, 2, '3', null, undefined, false],
-      num: 1,
-      str: '2',
-      bool: false,
-      obj: { a: 1 }
-    };
-    expect(clone(obj)).to.deep.equal(obj);
+    const Unknown = createHighcharts('Unknown', Highcharts);
+    expect(Unknown).toBeFalsy();
   });
 });

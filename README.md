@@ -1,19 +1,19 @@
 # vue-highcharts
 
-[![Build status](https://img.shields.io/travis/weizhenye/vue-highcharts.svg)](https://travis-ci.org/weizhenye/vue-highcharts)
-[![Coverage](https://img.shields.io/codecov/c/github/weizhenye/vue-highcharts.svg)](https://codecov.io/gh/weizhenye/vue-highcharts)
-[![Dependencies](https://img.shields.io/david/weizhenye/vue-highcharts.svg)](https://david-dm.org/weizhenye/vue-highcharts)
-[![NPM version](https://img.shields.io/npm/v/vue-highcharts.svg)](https://www.npmjs.com/package/vue-highcharts)
-[![License](https://img.shields.io/npm/l/vue-highcharts.svg)](https://github.com/weizhenye/vue-highcharts/blob/master/LICENSE)
-[![File size](https://badge-size.herokuapp.com/weizhenye/vue-highcharts/master/dist/vue-highcharts.min.js?compression=gzip&color=blue&label=min%2Bgzip)](https://unpkg.com/vue-highcharts/dist/vue-highcharts.min.js)
-[![Download](https://img.shields.io/npm/dm/vue-highcharts.svg)](https://www.npmjs.com/package/vue-highcharts)
-[![jsDelivr](https://data.jsdelivr.com/v1/package/npm/vue-highcharts/badge?style=rounded)](https://www.jsdelivr.com/package/npm/vue-highcharts)
+[![GitHub Action](https://github.com/weizhenye/vue-highcharts/workflows/CI/badge.svg)](https://github.com/weizhenye/vue-highcharts/actions)
+[![Coverage](https://badgen.net/codecov/c/github/weizhenye/vue-highcharts?icon=codecov)](https://codecov.io/gh/weizhenye/vue-highcharts)
+[![Dependencies](https://badgen.net/david/dep/weizhenye/vue-highcharts?icon=https://api.iconify.design/si-glyph:connect-2.svg?color=white)](https://david-dm.org/weizhenye/vue-highcharts)
+[![NPM version](https://badgen.net/npm/v/vue-highcharts?icon=npm)](https://www.npmjs.com/package/vue-highcharts)
+[![License](https://badgen.net/npm/license/vue-highcharts?icon=https://api.iconify.design/octicon:law.svg?color=white)](https://github.com/weizhenye/vue-highcharts/blob/master/LICENSE)
+[![File size](https://badgen.net/bundlephobia/minzip/vue-highcharts?icon=https://api.iconify.design/ant-design:file-zip-outline.svg?color=white)](https://bundlephobia.com/result?p=vue-highcharts)
+[![Download](https://badgen.net/npm/dm/vue-highcharts?icon=npm)](https://www.npmjs.com/package/vue-highcharts)
+[![jsDelivr](https://badgen.net/jsdelivr/hits/npm/vue-highcharts?icon=https://api.iconify.design/simple-icons:jsdelivr.svg?color=white)](https://www.jsdelivr.com/package/npm/vue-highcharts)
 
 Highcharts component for Vue.
 
 ## Requirements
 
-* Vue >= 2.0.0
+* Vue >= 3.0.0
 * Highcharts >= 4.2.0
 
 ## Installation
@@ -22,27 +22,47 @@ Highcharts component for Vue.
 npm i -S vue-highcharts
 ```
 
-If you use Vue v1, you should `npm i -S vue-highcharts@0.0`.
+For **Vue 2**, please run `npm i -S vue-highcharts@0.1`, and checkout document [here](https://github.com/weizhenye/vue-highcharts/tree/v0.1.0).
 
 ## Usage
 
-You can simply import it and use it.
+### Registering Globally
 
 ```js
-import Vue from 'vue';
+import { createApp } from 'vue';
+import Highcharts from 'highcharts';
 import VueHighcharts from 'vue-highcharts';
 
-Vue.use(VueHighcharts);
+import App from './App.vue';
+
+const app = createApp(App);
+app.use(VueHighcharts, { Highcharts });
+// now <Highcharts /> is available in components
 ```
 
-When vue-highcharts is included by `<script>`, it will be installed automatically if `window.Vue` and `window.Highcharts` exists, ohterwise you should to install it manually by calling `Vue.use(window.VueHighcharts['default']);`.
+<details>
+<summary>Direct <code>&lt;script&gt;</code> Include</summary>
 
-If you want to use Highstock, Highmaps, Gantt or any other [add-ons](https://github.com/highcharts/highcharts-dist/tree/master/modules), you should load them as modules.
+```html
+<script src="/path/to/vue/dist/vue.global.prod.js"></script>
+<script src="/path/to/highcharts/highcharts.js"></script>
+<script src="/path/to/vue-highcharts/dist/vue-highcharts.js"></script>
+<script>
+const { createApp } = window.Vue;
+const app = createApp();
+app.use(window.VueHighcharts['default'], { Highcharts: window.Highcharts });
+</script>
+```
+</details>
+
+### Highstock, Highmaps and any other add-ons
 
 ```js
-import Vue from 'vue';
-import VueHighcharts from 'vue-highcharts';
+import { createApp } from 'vue';
 import Highcharts from 'highcharts';
+import VueHighcharts from 'vue-highcharts';
+
+import App from './App.vue';
 
 // load these modules as your need
 import loadStock from 'highcharts/modules/stock.js';
@@ -60,66 +80,78 @@ loadDrilldown(Highcharts);
 loadHighchartsMore(Highcharts);
 loadSolidGauge(Highcharts);
 
-Vue.use(VueHighcharts, { Highcharts });
-// now you can use Highstock, Highmaps, Gantt, drilldown and solid gauge.
+const app = createApp(App);
+app.use(VueHighcharts, { Highcharts });
+// now <Highcharts />, <Highstock />, <Highmaps />, <HighchartsGantt /> is available in components
+// drilldown and solid gauge are work with <Highcharts />
 ```
 
-If you don't want to install vue-highcharts global, you can:
+### Registering In Components
 
-```js
+```vue
+<template>
+  <Highcharts />
+  <Highmaps />
+</template>
+
+<script>
 import Highcharts from 'highcharts';
+import { createHighcharts } from 'vue-highcharts';
+
 import loadMap from 'highcharts/modules/map.js';
-import { genComponent } from 'vue-highcharts';
 
 loadMap(Highcharts);
 
 export default {
-  name: 'MyComponent',
   components: {
-    Highcharts: genComponent('Highcharts', Highcharts),
-    Highmaps: genComponent('Highmaps', Highcharts),
-    // Highstock: genComponent('Highstock', Highcharts),
-    // HighchartsGantt: genComponent('HighchartsGantt', Highcharts),
+    Highcharts: createHighcharts('Highcharts', Highcharts),
+    Highmaps: createHighcharts('Highmaps', Highcharts),
+    // Highstock: createHighcharts('Highstock', Highcharts),
+    // HighchartsGantt: createHighcharts('HighchartsGantt', Highcharts),
   },
 };
+</script>
 ```
 
-```js
-/**
- * @param {String} name   Available values: 'Highcharts', 'Highstock', 'Highmaps', 'HighchartsGantt'
- * @param {Object} Highcharts   The `Highcharts` object
- * @returns {VueComponent|null}
- */
-function genComponent(name, Highcharts) {}
+Typing:
+
+```ts
+type ChartName = 'Highcharts' | 'Highstock' | 'Highmaps' | 'HighchartsGantt';
+function createHighcharts(name: ChartName, Highcharts: Highcharts): VueComponent | null
 ```
 
-Then you can use these components in the template.
+### Configuration options and the chart instance
 
-```html
+```vue
 <template>
-  <div>
-    <Highcharts :options="options" />
-    <Highstock :options="options" />
-    <Highmaps :options="options" />
-    <HighchartsGantt :options="options" />
-  </div>
+  <Highcharts ref="$highcharts" :options="chartOptions" />
+  <Highstock :options="stockOptions" />
+  <Highmaps :options="mapsOptions" />
+  <HighchartsGantt :options="ganttOptions" />
 </template>
+
+<script>
+import { ref, onMounted } from 'vue';
+
+export default {
+  setup() {
+    const $highcharts = ref(null);
+    onMounted(() => {
+      // access the `chart` instance with template refs
+      const { chart } = $highcharts.value;
+    });
+    return { $highcharts };
+  },
+};
+</script>
 ```
 
-The `options` object can be found in [Highcharts API Reference](https://api.highcharts.com/highcharts). Note you should never pass in `chart.renderTo` for watching it may cause stack overflow.
+The `options` object can be found in [Highcharts API Reference](https://api.highcharts.com/highcharts/).
 
-If you want to access the `chart` instance, you can use child component refs:
-
-```html
-<Highcharts ref="highcharts" :options="options" />
-```
-
-```js
-const { chart } = vm.$refs.highcharts;
-```
+The `chart` instance can be accessed with template refs.
 
 ## Demo
 
-* [Access `chart` instance via refs](https://codepen.io/weizhenye/pen/rrKgbP)
-* [Use Highmaps](https://codepen.io/weizhenye/pen/VKdJpW)
-* [Synchronized charts](https://codepen.io/weizhenye/pen/NYPZMK)
+* [Access `chart` instance via template refs](https://codepen.io/weizhenye/pen/yLeobOP)
+* [Synchronized charts](https://codepen.io/weizhenye/pen/PoZKmjG)
+* [Use Highmaps](https://codepen.io/weizhenye/pen/QWyMxaq)
