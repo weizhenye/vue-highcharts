@@ -21,49 +21,49 @@ describe('vue-highcharts', () => {
     const root = createComponent({
       template,
       setup() {
-        return { $chart: ref(null) };
+        return { chartRef: ref(null) };
       },
     });
-    expect(root.$chart.$highcharts.querySelector('.highcharts-root')).toBeDefined();
+    expect(root.chartRef.highchartsRef.querySelector('.highcharts-root')).toBeDefined();
   }
 
   it('should support <Highcharts /> component', () => {
-    checkComponent('<Highcharts ref="$chart" :options="{}" />');
+    checkComponent('<Highcharts ref="chartRef" :options="{}" />');
   });
 
   it('should support <Highstock /> component', () => {
-    checkComponent('<Highstock ref="$chart" :options="{}" />');
+    checkComponent('<Highstock ref="chartRef" :options="{}" />');
   });
 
   it('should support <Highmaps /> component', () => {
-    checkComponent('<Highmaps ref="$chart" :options="{}" />');
+    checkComponent('<Highmaps ref="chartRef" :options="{}" />');
   });
 
   it('should support <HighchartsGantt /> component', () => {
-    checkComponent('<HighchartsGantt ref="$chart" :options="{}" />');
+    checkComponent('<HighchartsGantt ref="chartRef" :options="{}" />');
   });
 
   it('can access the `chart` instance via template refs', () => {
     const root = createComponent({
-      template: '<Highcharts ref="$chart" :options="{}" />',
+      template: '<Highcharts ref="chartRef" :options="{}" />',
       setup() {
-        return { $chart: ref(null) };
+        return { chartRef: ref(null) };
       },
     });
-    expect(root.$chart.chart).toBeDefined();
+    expect(root.chartRef.chart).toBeDefined();
   });
 
   it('should destroy the chart instance when vm destroyed', (done) => {
     let chart = null;
     let el = null;
     const app = createApp({
-      template: '<div ref="$div"><Highcharts ref="$chart" :options="{}" /></div>',
+      template: '<div ref="divRef"><Highcharts ref="chartRef" :options="{}" /></div>',
       setup() {
-        const $div = ref(null);
-        const $chart = ref(null);
+        const divRef = ref(null);
+        const chartRef = ref(null);
         onBeforeUnmount(() => {
-          el = $div.value;
-          chart = $chart.value.chart;
+          el = divRef.value;
+          chart = chartRef.value.chart;
           expect(el.querySelector('.highcharts-root')).toBeDefined();
           expect(chart).toBeDefined();
         });
@@ -74,7 +74,7 @@ describe('vue-highcharts', () => {
             done();
           });
         });
-        return { $div, $chart };
+        return { divRef, chartRef };
       },
     });
     app.use(VueHighcharts, { Highcharts });
@@ -84,18 +84,18 @@ describe('vue-highcharts', () => {
 
   it('should watch `options`', () => {
     const root = createComponent({
-      template: '<Highcharts ref="$chart" :options="options" />',
+      template: '<Highcharts ref="chartRef" :options="options" />',
       setup() {
         return {
-          $chart: ref(null),
+          chartRef: ref(null),
           options: ref({ title: { text: 'origin' } }),
         };
       },
     });
-    expect(root.$chart.chart.title.textStr).toBe('origin');
+    expect(root.chartRef.chart.title.textStr).toBe('origin');
     root.options.title.text = 'changed';
     nextTick().then(() => {
-      expect(root.$chart.chart.title.textStr).toBe('changed');
+      expect(root.chartRef.chart.title.textStr).toBe('changed');
     });
   });
 

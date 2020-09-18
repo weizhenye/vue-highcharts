@@ -2,7 +2,6 @@
 
 [![GitHub Action](https://github.com/weizhenye/vue-highcharts/workflows/CI/badge.svg)](https://github.com/weizhenye/vue-highcharts/actions)
 [![Coverage](https://badgen.net/codecov/c/github/weizhenye/vue-highcharts?icon=codecov)](https://codecov.io/gh/weizhenye/vue-highcharts)
-[![Dependencies](https://badgen.net/david/dep/weizhenye/vue-highcharts?icon=https://api.iconify.design/si-glyph:connect-2.svg?color=white)](https://david-dm.org/weizhenye/vue-highcharts)
 [![NPM version](https://badgen.net/npm/v/vue-highcharts?icon=npm)](https://www.npmjs.com/package/vue-highcharts)
 [![License](https://badgen.net/npm/license/vue-highcharts?icon=https://api.iconify.design/octicon:law.svg?color=white)](https://github.com/weizhenye/vue-highcharts/blob/master/LICENSE)
 [![File size](https://badgen.net/bundlephobia/minzip/vue-highcharts?icon=https://api.iconify.design/ant-design:file-zip-outline.svg?color=white)](https://bundlephobia.com/result?p=vue-highcharts)
@@ -26,7 +25,7 @@ For **Vue 2**, please run `npm i -S vue-highcharts@0.1`, and checkout document [
 
 ## Usage
 
-### Registering Globally
+### Registering globally
 
 ```js
 import { createApp } from 'vue';
@@ -41,7 +40,7 @@ app.use(VueHighcharts, { Highcharts });
 ```
 
 <details>
-<summary>Direct <code>&lt;script&gt;</code> Include</summary>
+<summary>Direct <code>&lt;script&gt;</code> include</summary>
 
 ```html
 <script src="/path/to/vue/dist/vue.global.prod.js"></script>
@@ -86,7 +85,7 @@ app.use(VueHighcharts, { Highcharts });
 // drilldown and solid gauge are work with <Highcharts />
 ```
 
-### Registering In Components
+### Registering in components
 
 ```vue
 <template>
@@ -124,7 +123,7 @@ function createHighcharts(name: ChartName, Highcharts: Highcharts): VueComponent
 
 ```vue
 <template>
-  <Highcharts ref="$highcharts" :options="chartOptions" />
+  <Highcharts ref="highchartsRef" :options="chartOptions" />
   <Highstock :options="stockOptions" />
   <Highmaps :options="mapsOptions" />
   <HighchartsGantt :options="ganttOptions" />
@@ -135,12 +134,18 @@ import { ref, onMounted } from 'vue';
 
 export default {
   setup() {
-    const $highcharts = ref(null);
+    const highchartsRef = ref(null);
     onMounted(() => {
       // access the `chart` instance with template refs
-      const { chart } = $highcharts.value;
+      const { chart } = highchartsRef.value;
     });
-    return { $highcharts };
+    return {
+      highchartsRef,
+      chartOptions: {},
+      stockOptions: {},
+      mapsOptions: {},
+      ganttOptions: {},
+    };
   },
 };
 </script>

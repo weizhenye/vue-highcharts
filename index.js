@@ -8,7 +8,7 @@ const ctors = {
 };
 
 function render() {
-  return h('div', { ref: '$highcharts' });
+  return h('div', { ref: 'highchartsRef' });
 }
 
 function createHighcharts(name, Highcharts) {
@@ -26,19 +26,19 @@ function createHighcharts(name, Highcharts) {
     props: ['options'],
     render,
     setup(props) {
-      const $highcharts = ref(null);
+      const highchartsRef = ref(null);
       const chart = ref(null);
       onMounted(() => {
         watchEffect(() => {
-          chart.value = ctor($highcharts.value, props.options);
+          chart.value = ctor(highchartsRef.value, props.options);
         });
       });
       onBeforeUnmount(() => {
-        if ($highcharts.value) {
+        if (highchartsRef.value) {
           chart.value.destroy();
         }
       });
-      return { $highcharts, chart };
+      return { highchartsRef, chart };
     },
   };
 }
